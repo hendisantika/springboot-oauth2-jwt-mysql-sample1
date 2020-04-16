@@ -15,6 +15,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * Date: 17/04/20
  * Time: 06.38
  */
-public interface MessageRepository extends PagingAndSortingRepository<Message, Long> {
+public interface MessageRepository extends PagingAndSortingRepository<Message, Long>, MessageRepositoryCustom {
     Page<Message> findAllByUser(User user, Pageable pageable);
 }
