@@ -72,4 +72,41 @@ class ApiError {
             fieldError.getRejectedValue(),
             fieldError.getDefaultMessage());
   }
+
+  void addValidationErrors(List<FieldError> fieldErrors) {
+    fieldErrors.forEach(this::addValidationError);
+  }
+
+  private void addValidationError(ObjectError objectError) {
+    this.addValidationError(
+            objectError.getObjectName(),
+            objectError.getDefaultMessage());
+  }
+
+  void addValidationError(List<ObjectError> globalErrors) {
+    globalErrors.forEach(this::addValidationError);
+  }
+
+  /**
+   * Utility method for adding error of ConstraintViolation. Usually when a @Validated validation fails.
+   *
+   * @param cv the ConstraintViolation
+   */
+  private void addValidationError(ConstraintViolation<?> cv) {
+    this.addValidationError(
+            cv.getRootBeanClass().getSimpleName(),
+            ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(),
+            cv.getInvalidValue(),
+            cv.getMessage());
+  }
+
+  void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
+    constraintViolations.forEach(this::addValidationError);
+  }
+
+
+  abstract class ApiSubError {
+
+  }
+
 }
