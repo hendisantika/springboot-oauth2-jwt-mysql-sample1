@@ -14,6 +14,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -127,5 +128,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   WebRequest request) {
         String error = "Error writing JSON output";
         return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, error, ex));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(
+            NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(String.format("Could not find the %s method for URL %s", ex.getHttpMethod(),
+                ex.getRequestURL()));
+        apiError.setDebugMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
     }
 }
