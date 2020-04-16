@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import lombok.Data;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
+import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA. Project : springboot-oauth2-jwt-mysql-sample1 User: hendisantika Email:
