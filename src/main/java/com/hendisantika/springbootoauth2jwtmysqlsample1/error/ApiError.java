@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA. Project : springboot-oauth2-jwt-mysql-sample1 User: hendisantika Email:
@@ -46,5 +48,28 @@ class ApiError {
     this.status = status;
     this.message = message;
     this.debugMessage = ex.getLocalizedMessage();
+  }
+
+  private void addSubError(ApiSubError subError) {
+    if (subErrors == null) {
+      subErrors = new ArrayList<>();
+    }
+    subErrors.add(subError);
+  }
+
+  private void addValidationError(String object, String field, Object rejectedValue, String message) {
+    addSubError(new ApiValidationError(object, field, rejectedValue, message));
+  }
+
+  private void addValidationError(String object, String message) {
+    addSubError(new ApiValidationError(object, message));
+  }
+
+  private void addValidationError(FieldError fieldError) {
+    this.addValidationError(
+            fieldError.getObjectName(),
+            fieldError.getField(),
+            fieldError.getRejectedValue(),
+            fieldError.getDefaultMessage());
   }
 }
