@@ -91,6 +91,17 @@
                     </webResources>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>99.99.99</version>
+                <configuration>
+                    <version>1</version>
+                    <devserver.environment>
+                        <SPRING_PROFILES_ACTIVE>dev</SPRING_PROFILES_ACTIVE>
+                    </devserver.environment>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
