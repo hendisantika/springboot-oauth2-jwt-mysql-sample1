@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -46,4 +47,15 @@ class UserController {
         }
         return repository.findAll(pageable);
     }
+
+    @GetMapping("/search")
+    Page<User> search(@RequestParam String email, Pageable pageable, OAuth2Authentication authentication) {
+        String auth = (String) authentication.getUserAuthentication().getPrincipal();
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
+        if (role.equals(User.Role.USER.name())) {
+            return repository.findAllByEmailContainsAndEmail(email, auth, pageable);
+        }
+        return repository.findByEmailContains(email, pageable);
+    }
+
 }
