@@ -12,8 +12,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,4 +91,19 @@ class UserController {
         repository.save(res);
     }
 
+    @PostMapping
+    @PreAuthorize("!hasAuthority('USER')")
+    User create(@Valid @RequestBody User res) {
+        return repository.save(res);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("!hasAuthority('USER')")
+    void delete(@PathVariable Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException(User.class, "id", id.toString());
+        }
+    }
 }
