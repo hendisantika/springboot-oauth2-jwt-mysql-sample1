@@ -39,4 +39,9 @@ public class SignInController {
         User u = new User(null, email, passwordEncoder.encode(password), User.Role.USER, 0D, null);
         return repository.save(u);
     }
+
+    @PostMapping("/validateEmail")
+    Boolean emailExists(@RequestParam String email) {
+        return repository.existsByEmail(email);
+    }
 }
