@@ -3,7 +3,9 @@ package com.hendisantika.springbootoauth2jwtmysqlsample1.error;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -12,11 +14,16 @@ import org.springframework.validation.ObjectError;
 import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA. Project : springboot-oauth2-jwt-mysql-sample1 User: hendisantika Email:
- * hendisantika@gmail.com Telegram : @hendisantika34 Date: 17/04/20 Time: 06.50
+ * Created by IntelliJ IDEA.
+ * Project : springboot-oauth2-jwt-mysql-sample1
+ * User: hendisantika
+ * Email: hendisantika@gmail.com
+ * Telegram : @hendisantika34
+ * Date: 17/04/20 Time: 06.50
  */
 @Data
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.CUSTOM, property = "error", visible =
@@ -29,7 +36,7 @@ class ApiError {
   private LocalDateTime timestamp;
   private String message;
   private String debugMessage;
-  private List<ApiSubError> subErrors;
+  private List<ApiError> subErrors;
 
   private ApiError() {
     timestamp = LocalDateTime.now();
@@ -54,7 +61,7 @@ class ApiError {
     this.debugMessage = ex.getLocalizedMessage();
   }
 
-  private void addSubError(ApiSubError subError) {
+  private void addSubError(ApiError subError) {
     if (subErrors == null) {
       subErrors = new ArrayList<>();
     }
@@ -108,9 +115,24 @@ class ApiError {
     constraintViolations.forEach(this::addValidationError);
   }
 
-
   abstract class ApiSubError {
 
   }
 
+  @Data
+  @EqualsAndHashCode
+  @AllArgsConstructor
+  class ApiValidationError extends ApiSubError {
+    private String object;
+    private String field;
+    private Object rejectedValue;
+    private String message;
+
+    ApiValidationError(String object, String message) {
+      this.object = object;
+      this.message = message;
+    }
+  }
 }
+
+
