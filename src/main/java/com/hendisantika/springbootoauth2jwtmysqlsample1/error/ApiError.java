@@ -36,7 +36,7 @@ class ApiError {
   private LocalDateTime timestamp;
   private String message;
   private String debugMessage;
-  private List<ApiError> subErrors;
+  private List<ApiSubError> subErrors;
 
   private ApiError() {
     timestamp = LocalDateTime.now();
@@ -61,7 +61,7 @@ class ApiError {
     this.debugMessage = ex.getLocalizedMessage();
   }
 
-  private void addSubError(ApiError subError) {
+  private void addSubError(ApiSubError subError) {
     if (subErrors == null) {
       subErrors = new ArrayList<>();
     }
