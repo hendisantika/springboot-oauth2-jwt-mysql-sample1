@@ -106,4 +106,19 @@ class UserController {
             throw new EntityNotFoundException(User.class, "id", id.toString());
         }
     }
+
+    @PutMapping("/{id}/changePassword")
+    @PreAuthorize("!hasAuthority('USER') || (#oldPassword != null && !#oldPassword.isEmpty() && authentication" +
+            ".principal == @userRepository.findById(#id).orElse(new net.reliqs.gleeometer.users.User()).email)")
+    void changePassword(@PathVariable Long id, @RequestParam(required = false) String oldPassword, @Valid @Size(min =
+            3) @RequestParam String newPassword) {
+        User user = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, "id",
+                id.toString()));
+        if (oldPassword == null || oldPassword.isEmpty() || passwordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            repository.save(user);
+        } else {
+            throw new ConstraintViolationException("old password doesn't match", new HashSet<>());
+        }
+    }
 }
