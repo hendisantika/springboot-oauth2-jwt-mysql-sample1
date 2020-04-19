@@ -1,3 +1,4 @@
+# springboot-oauth2-jwt-mysql-sample1
 # Glee-O-Meter
 
 [Glee-o-meter](https://glee-o-meter.appspot.com) is a simple Angular 7 application focused on the interaction with a Spring REST server.
@@ -14,12 +15,12 @@ The application has the following features:
 * CRUD operations on whole data;
 * sign-in to permit the registration of new users;
 * authentication based on oauth2 JWT, with token refresh;
-* consumes REST resources `/api/glee`, `/api/users` and `/api/signin`
+* consumes REST resources `/api/messages`, `/api/users` and `/api/signin`
 
 The server side is implemented with Spring boot, slightly customized to run on [Google App Engine](https://cloud.google.com/appengine/).
 Server implementation features the following:
 * oauth2 JWT authentication with spring-boot, using grant types `password` and `refresh token`;
-* publish 2 authenticated REST resources `/api/glee`, `/api/users` and one public `/api/signin` for user registration;
+* publish 2 authenticated REST resources `/api/messages`, `/api/users` and one public `/api/signin` for user registration;
 * method-level authorization based on `@PreAuthorize` and `@PostAuthorize`;
 * data access based on logged user's permissions;
 * Spring based JSR-349 data validation;
