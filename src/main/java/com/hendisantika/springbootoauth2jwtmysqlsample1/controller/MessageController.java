@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,7 +95,7 @@ public class MessageController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN') || (@messageRepository.findById(#id).orElse(new com.hendisantika" +
-            ".springbootoauth2jwtmysqlsample1.Message()).user == @userRepository.findByEmail(authentication" +
+            ".springbootoauth2jwtmysqlsample1.model.Message()).user == @userRepository.findByEmail(authentication" +
             ".principal).get())")
     void updateMessage(@PathVariable Long id, @Valid @RequestBody Message res) {
         if (messageRepository.existsById(id)) {
@@ -109,6 +110,19 @@ public class MessageController {
             "(authentication.principal).get().id)")
     Message createMessage(@Valid @RequestBody Message res) {
         return messageRepository.save(res);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize(
+            "hasAuthority('ADMIN') || (@messageRepository.findById(#id).orElse(new com.hendisantika" +
+                    ".springbootoauth2jwtmysqlsample1.model.Message()).user == @userRepository.findByEmail" +
+                    "(authentication.principal).get())")
+    void deleteMessage(@PathVariable Long id) {
+        if (messageRepository.existsById(id)) {
+            messageRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException(User.class, "id", id.toString());
+        }
     }
 
 }
