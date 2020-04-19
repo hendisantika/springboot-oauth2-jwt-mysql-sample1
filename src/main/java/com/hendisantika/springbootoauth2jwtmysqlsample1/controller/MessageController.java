@@ -8,9 +8,11 @@ import com.hendisantika.springbootoauth2jwtmysqlsample1.repository.UserRepositor
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,6 +77,14 @@ public class MessageController {
             return messageRepository.filter(fromDate, toDate, fromTime, toTime, text, cal, userId, pageable);
         }
         return messageRepository.filter(fromDate, toDate, fromTime, toTime, text, cal, userId, pageable);
+    }
+
+    @GetMapping("/{id}")
+    @PostAuthorize("hasAuthority('ADMIN') || (returnObject.user == @userRepository.findByEmail(authentication" +
+            ".principal).get())")
+    Message findOneMessage(@PathVariable Long id) {
+        return messageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, "id",
+                id.toString()));
     }
 
 }
