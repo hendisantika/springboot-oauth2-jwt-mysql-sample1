@@ -40,3 +40,4 @@ Available users are:
 |...|
 
 
+https://www.toptal.com/spring/spring-boot-oauth2-jwt-rest-protection
